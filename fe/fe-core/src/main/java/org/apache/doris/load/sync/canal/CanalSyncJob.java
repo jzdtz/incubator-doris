@@ -116,8 +116,8 @@ public class CanalSyncJob extends SyncJob {
                         colNames.add(column.getName());
                     }
                 }
-                CanalSyncChannel syncChannel = new CanalSyncChannel(this, db, (OlapTable) table, colNames,
-                        channelDescription.getSrcDatabase(), channelDescription.getSrcTableName());
+                CanalSyncChannel syncChannel = new CanalSyncChannel(channelDescription.getChannelId(), this, db,
+                        (OlapTable) table, colNames, channelDescription.getSrcDatabase(), channelDescription.getSrcTableName());
                 if (channelDescription.getPartitionNames() != null) {
                     syncChannel.setPartitions(channelDescription.getPartitionNames());
                 }
@@ -239,11 +239,7 @@ public class CanalSyncJob extends SyncJob {
             return;
         }
         if (client != null) {
-            if (jobState == JobState.CANCELLED) {
-                client.shutdown(true);
-            } else {
-                client.shutdown(false);
-            }
+            client.shutdown(true);
         }
         updateState(jobState, false);
         LOG.info("client has been stopped. id: {}, jobName: {}" , id, jobName);
