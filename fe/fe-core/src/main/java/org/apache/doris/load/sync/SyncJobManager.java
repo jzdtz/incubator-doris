@@ -308,6 +308,7 @@ public class SyncJobManager implements Writable {
             writeUnlock();
         }
     }
+    
     public void replayUpdateSyncJobState(SyncJob.SyncJobUpdateStateInfo info) {
         writeLock();
         try {
