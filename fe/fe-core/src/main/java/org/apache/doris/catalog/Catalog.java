@@ -418,6 +418,8 @@ public class Catalog {
 
     private RoutineLoadTaskScheduler routineLoadTaskScheduler;
 
+    private SyncChecker syncChecker;
+
     private SmallFileMgr smallFileMgr;
 
     private DynamicPartitionScheduler dynamicPartitionScheduler;
@@ -572,6 +574,7 @@ public class Catalog {
         this.routineLoadScheduler = new RoutineLoadScheduler(routineLoadManager);
         this.routineLoadTaskScheduler = new RoutineLoadTaskScheduler(routineLoadManager);
 
+        this.syncChecker = new SyncChecker(syncJobManager);
         this.smallFileMgr = new SmallFileMgr();
 
         this.dynamicPartitionScheduler = new DynamicPartitionScheduler("DynamicPartitionScheduler",
@@ -1291,9 +1294,6 @@ public class Catalog {
         // Export checker
         ExportChecker.init(Config.export_checker_interval_second * 1000L);
         ExportChecker.startAll();
-        // Sync checker
-        SyncChecker.init(Config.sync_checker_interval_second * 1000L);
-        SyncChecker.startAll();
         // Tablet checker and scheduler
         tabletChecker.start();
         tabletScheduler.start();
@@ -1322,6 +1322,8 @@ public class Catalog {
         // start routine load scheduler
         routineLoadScheduler.start();
         routineLoadTaskScheduler.start();
+        // start sync checker
+        syncChecker.start();
         // start dynamic partition task
         dynamicPartitionScheduler.start();
         // start daemon thread to update db used data quota for db txn manager periodically
